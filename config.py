@@ -1,0 +1,1 @@
+TRANING_DATA_SOURCE = 'training_data/spam/'
