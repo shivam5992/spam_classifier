@@ -1,4 +1,3 @@
-from config import *
 from textclean import clean
 import glob, json
 
@@ -63,42 +62,53 @@ class trainer():
 				bag_of_ngrams['bag'][wordcomb] += 1
 		return bag_of_ngrams
 
+	def _create_unique_word_bag(self,text):
+		words = list(set(text.split()))
+		return words
 
 
 
 
 if __name__ == '__main__':
-	word_dump = {}
-	bigram_dump = {}
-	trigram_dump = {}
-	for index, eachfile in enumerate(glob.glob(TRANING_DATA_SOURCE + "/*.txt")):
+	# word_dump = {}
+	# bigram_dump = {}
+	# trigram_dump = {}
+
+	overall_spam = {}
+	for index, eachfile in enumerate(glob.glob('training_data/ham/*.txt')):		
+		print index
 		try:
-			print index
 			data = open(eachfile).read()
 			train = trainer(data)
 			use = utility()
-			message = use._cleantext()
-
-			pickle_words = train._trainwords(message)
-			for key, value in pickle_words.iteritems():
-				if key in word_dump:
-					word_dump[key] += value
+			message = use._cleantext(data)
+			itsporb = train._create_unique_word_bag(message)
+			for x in itsporb:
+				if x in overall_spam:
+					overall_spam[x] += 1
 				else:
-					word_dump[key] = value
+					overall_spam[x] = 1
 
-			pickle_bigram = train._traingram(message, 2)
-			for key, value in pickle_bigram['bag'].iteritems():
-				if key in bigram_dump:
-					bigram_dump[key] += value
-				else:
-					bigram_dump[key] = value
+			# pickle_words = train._trainwords(message)
+			# for key, value in pickle_words.iteritems():
+			# 	if key in word_dump:
+			# 		word_dump[key] += value
+			# 	else:
+			# 		word_dump[key] = value
 
-			pickle_trigram = train._traingram(message, 3)
-			for key, value in pickle_trigram['bag'].iteritems():
-				if key in trigram_dump:
-					trigram_dump[key] += value
-				else:
-					trigram_dump[key] = value
+			# pickle_bigram = train._traingram(message, 2)
+			# for key, value in pickle_bigram['bag'].iteritems():
+			# 	if key in bigram_dump:
+			# 		bigram_dump[key] += value
+			# 	else:
+			# 		bigram_dump[key] = value
+
+			# pickle_trigram = train._traingram(message, 3)
+			# for key, value in pickle_trigram['bag'].iteritems():
+			# 	if key in trigram_dump:
+			# 		trigram_dump[key] += value
+			# 	else:
+			# 		trigram_dump[key] = value
 
 		except:
 		 	continue
@@ -107,4 +117,5 @@ if __name__ == '__main__':
 	# use._dumppickle(word_dump, "word")
 	# use._dumppickle(bigram_dump, "bigram")
 	# use._dumppickle(trigram_dump, "trigram")
+	use._dumppickle(overall_spam, "word_prob_base")
 
