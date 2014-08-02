@@ -34,52 +34,31 @@ class trainer():
 
 
 if __name__ == '__main__':
-	# word_dump = {}
-	# bigram_dump = {}
-	# trigram_dump = {}
-
+	use = utility()
 	overall_spam = {}
-	for index, eachfile in enumerate(glob.glob('training_data/ham/*.txt')):		
+	for index, eachfile in enumerate(glob.glob('training_data/SPAM_DATA/*.spam.txt')):		
 		print index
-		try:
-			data = open(eachfile).read()
-			train = trainer(data)
-			use = utility()
-			message = use._cleantext(data)
-			itsporb = train._create_unique_word_bag(message)
-			for x in itsporb:
-				if x in overall_spam:
-					overall_spam[x] += 1
-				else:
-					overall_spam[x] = 1
+		if index <= 13200:
+		#if index <= 13236:
+			try:
+				data = open(eachfile).read()
+				train = trainer(data)
+				message = use._cleantext(data)
+				itsporb = train._create_unique_word_bag(message)
+				for x in itsporb:
+					if x in overall_spam:
+						overall_spam[x] += 1
+					else:
+						overall_spam[x] = 1
 
-			# pickle_words = train._trainwords(message)
-			# for key, value in pickle_words.iteritems():
-			# 	if key in word_dump:
-			# 		word_dump[key] += value
-			# 	else:
-			# 		word_dump[key] = value
+				# pickle_bigram = train._traingram(message, 3)
+				# for key, value in pickle_bigram['bag'].iteritems():
+				# 	if key in bigram_dump:
+				# 		bigram_dump[key] += value
+				# 	else:
+				# 		bigram_dump[key] = value
 
-			# pickle_bigram = train._traingram(message, 2)
-			# for key, value in pickle_bigram['bag'].iteritems():
-			# 	if key in bigram_dump:
-			# 		bigram_dump[key] += value
-			# 	else:
-			# 		bigram_dump[key] = value
-
-			# pickle_trigram = train._traingram(message, 3)
-			# for key, value in pickle_trigram['bag'].iteritems():
-			# 	if key in trigram_dump:
-			# 		trigram_dump[key] += value
-			# 	else:
-			# 		trigram_dump[key] = value
-
-		except:
-		 	continue
+			except:
+			 	continue
 		
-	# use = utility()
-	# use._dumppickle(word_dump, "word")
-	# use._dumppickle(bigram_dump, "bigram")
-	# use._dumppickle(trigram_dump, "trigram")
-	use._dumppickle(overall_spam, "word_prob_base")
-
+	use._dumppickle(overall_spam, "SPAM_Learnt_Data")
