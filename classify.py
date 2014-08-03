@@ -34,31 +34,52 @@ class naiveBayesClassifier():
 			return 0
 
 class train_by_classify():
+	
 	def __init__(self):
 		return None
 
 	def decide_threshold(self):	
-		naivebayes = naiveBayesClassifier('pickle_wordspam.json', 'pickle_wordham.json', spam_total = 1500, ham_total = 3692)
+		naivebayes = naiveBayesClassifier('pickle_SPAM_Learnt_Data.json', 'pickle_HAM_Learnt_Data.json', spam_total = 13200, ham_total = 13236)
 		sum_spamicity = 0
 		sum_hamicity = 0
-		for count, filename in enumerate(glob.glob("training_data/ham/*.txt")):
-			try:
-				print count
-				email = open(filename).read()
-				message = utility()._cleantext(email)
-				spamicity = naivebayes.calculate_spamicity(message)
-				sum_spamicity += spamicity
+		
+		for index, eachfile in enumerate(glob.glob('training_data/SPAM_DATA/*.spam.txt')):		
+			count = 0
+			if index <= 13200: # spam
+			#if index <= 13236: # ham
+				try:
+					print index
+					email = open(eachfile).read()
+					message = utility()._cleantext(email)
+					spamicity = naivebayes.calculate_spamicity(message)
+					sum_spamicity += spamicity
 
-				hamicity = naivebayes.calculate_spamicity(message)
-				sum_hamicity += hamicity
-			except:
-				continue
-		HAM_VAL = float(sum_hamicity) / ham_total
-		SPAM_VAL = float(sum_spamicity) / spam_total
+					# hamicity = naivebayes.calculate_spamicity(message)
+					# sum_hamicity += hamicity
+				except:
+					continue
+		#HAM_VAL = float(sum_hamicity) / ham_total
+		SPAM_VAL = float(sum_spamicity) / 13200
+		print SPAM_VAL
 		#SPAM_VAL = 0.956258890514
 		#HAM_VAL = 0.0927524323055
-		
+
+	def classify_it(self, mail):
+		naivebayes = naiveBayesClassifier('pickle_SPAM_Learnt_Data.json', 'pickle_HAM_Learnt_Data.json', spam_total = 13200, ham_total = 13236)
+		email = open(mail).read()
+		message = utility()._cleantext(email)
+		spamicity = naivebayes.calculate_spamicity(message)
+		return spamicity
+
+
 if __name__ == '__main__':
-	tbc = train_by_classify()
-	tbcl.decide_threshold()
+	tbcl = train_by_classify()
+	# for index, eachfile in enumerate(glob.glob('training_data/HAM_DATA/*.ham.txt')):
+	# 	if index > 13200:		
+	spamit = tbcl.classify_it('testmail.txt')
+	print spamit
+	if spamit > 0.5:
+		print "Its a Spam"
+	else:
+		print "Its not a Spam"
 

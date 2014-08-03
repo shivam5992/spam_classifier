@@ -38,8 +38,8 @@ if __name__ == '__main__':
 	overall_spam = {}
 	for index, eachfile in enumerate(glob.glob('training_data/SPAM_DATA/*.spam.txt')):		
 		print index
-		if index <= 13200:
-		#if index <= 13236:
+		if index <= 13200: # spam
+		#if index <= 13236: # ham
 			try:
 				data = open(eachfile).read()
 				train = trainer(data)
